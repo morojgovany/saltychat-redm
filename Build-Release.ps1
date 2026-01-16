@@ -1,52 +1,26 @@
-﻿# Find msbuild and use it later on
-$msBuildPath = $null
-
-if (Test-Path "C:\Program Files\Microsoft Visual Studio\2022\*\Msbuild\Current\Bin\MSBuild.exe")
-{
-    $msBuildPath = "C:\Program Files\Microsoft Visual Studio\2022\*\Msbuild\Current\Bin\MSBuild.exe"
-}
-else
-{
-    foreach($path in $env:Path.Split(";"))
-    {
-        if (Test-Path "$path\msbuild.exe")
-        {
-            $msBuildPath = "$path\msbuild.exe"
-
-            break
-        }
-    }
-
-    if ($msBuildPath -eq $null)
-    {
-        throw "Could not find msbuild"
-    }
-}
+﻿$ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 # Cleanup/Create release directory
-if (Test-Path release)
-{
+if (Test-Path release) {
     Remove-Item release\* -Recurse -Force
-}
-else
-{
+} else {
     New-Item .\release -ItemType Directory | Out-Null
 }
 
 ## Salty Chat ##
 
 # Create build directory for Salty Chat
-if ((Test-Path .\release\saltychat) -eq $false)
-{
+if ((Test-Path .\release\saltychat) -eq $false) {
     New-Item .\release\saltychat -ItemType Directory | Out-Null
 }
 
-# Build Salty Chat Solution
-$buildOutput = (& $msBuildPath saltychat\SaltyChat-RedM.sln /property:Configuration=Release) -Join [System.Environment]::NewLine
+# Build Salty Chat Solution (dotnet msbuild = résolution SDK OK)
+$solutionPath = Join-Path $PSScriptRoot "saltychat\SaltyChat-RedM.sln"
 
-if ($buildOutput -notmatch "Build succeeded.")
-{
-    throw $buildOutput
+$buildOutput = & dotnet msbuild $solutionPath /p:Configuration=Release /m 2>&1
+if ($LASTEXITCODE -ne 0) {
+    throw ($buildOutput -join [System.Environment]::NewLine)
 }
 
 # Copy all necessary items to the release directory
