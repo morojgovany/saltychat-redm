@@ -935,27 +935,29 @@ namespace SaltyClient
             {
                 Ped playerPed = Game.Player.Character;
                 bool isInVehicle = API.IsPedInAnyVehicle(playerPed.Handle, false);
-                bool isToggleRangeKeyJ = string.Equals(this.Configuration.ToggleRangeKey, "J", StringComparison.OrdinalIgnoreCase);
+                const uint rawKeyJ = 0x4A;
+                const uint isRawKeyReleasedHash = 0xF3830D8E;
+                bool isToggleRangeKeyJ = this.Configuration.ToggleRange == isRawKeyReleasedHash;
 
                 Game.DisableControlThisFrame(0, Control.PushToTalk);
-                Game.DisableControlThisFrame(0, (Control)this.Configuration.ToggleRangeKey);
-                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkPrimaryKey);
-                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkSecondaryKey);
+                Game.DisableControlThisFrame(0, (Control)this.Configuration.ToggleRange);
+                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkPrimary);
+                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkSecondary);
 
                 if (isInVehicle)
                 {
-                    if (isToggleRangeKeyJ && API.IsRawKeyReleased(0x4A))
+                    if (isToggleRangeKeyJ && Function.Call<bool>((Hash)isRawKeyReleasedHash, rawKeyJ))
                         this.OnVoiceRangePressed();
                 }
                 else
                 {
-                    if (Game.IsControlJustPressed(0, (Control)this.Configuration.ToggleRangeKey))
+                    if (Game.IsControlJustPressed(0, (Control)this.Configuration.ToggleRange))
                         this.OnVoiceRangePressed();
                 }
 
-                if (Game.IsControlJustPressed(0, (Control)this.Configuration.TalkPrimaryKey))
+                if (Game.IsControlJustPressed(0, (Control)this.Configuration.TalkPrimary))
                     this.OnPrimaryRadioPressed();
-                else if (Game.IsControlJustReleased(0, (Control)this.Configuration.TalkPrimaryKey))
+                else if (Game.IsControlJustReleased(0, (Control)this.Configuration.TalkPrimary))
                     this.OnPrimaryRadioReleased();
 
                 if (Game.IsControlJustPressed(0, (Control)this.Configuration.TalkSecondary))
