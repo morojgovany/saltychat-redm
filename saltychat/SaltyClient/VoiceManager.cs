@@ -933,13 +933,25 @@ namespace SaltyClient
         {
             if (this.IsEnabled)
             {
+                Ped playerPed = Game.Player.Character;
+                bool isInVehicle = API.IsPedInAnyVehicle(playerPed.Handle, false);
+                bool isToggleRangeKeyJ = string.Equals(this.Configuration.ToggleRangeKey, "J", StringComparison.OrdinalIgnoreCase);
+
                 Game.DisableControlThisFrame(0, Control.PushToTalk);
                 Game.DisableControlThisFrame(0, (Control)this.Configuration.ToggleRangeKey);
                 Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkPrimaryKey);
                 Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkSecondaryKey);
 
-                if (Game.IsControlJustPressed(0, (Control)this.Configuration.ToggleRangeKey))
-                    this.OnVoiceRangePressed();
+                if (isInVehicle)
+                {
+                    if (isToggleRangeKeyJ && API.IsRawKeyReleased(0x4A))
+                        this.OnVoiceRangePressed();
+                }
+                else
+                {
+                    if (Game.IsControlJustPressed(0, (Control)this.Configuration.ToggleRangeKey))
+                        this.OnVoiceRangePressed();
+                }
 
                 if (Game.IsControlJustPressed(0, (Control)this.Configuration.TalkPrimaryKey))
                     this.OnPrimaryRadioPressed();

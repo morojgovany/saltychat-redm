@@ -22,6 +22,7 @@
 
         #region Proximity
         public const string SaltyChat_SetVoiceRange = "SaltyChat_SetVoiceRange";
+        public const string SaltyChat_ToggleVoiceRange = "SaltyChat_ToggleVoiceRange";
         #endregion
 
         #region Phone
