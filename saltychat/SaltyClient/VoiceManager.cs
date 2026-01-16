@@ -934,16 +934,16 @@ namespace SaltyClient
             if (this.IsEnabled)
             {
                 Game.DisableControlThisFrame(0, Control.PushToTalk);
-                Game.DisableControlThisFrame(0, (Control)this.Configuration.ToggleRange);
-                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkPrimary);
-                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkSecondary);
+                Game.DisableControlThisFrame(0, (Control)this.Configuration.ToggleRangeKey);
+                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkPrimaryKey);
+                Game.DisableControlThisFrame(0, (Control)this.Configuration.TalkSecondaryKey);
 
-                if (Game.IsControlJustPressed(0, (Control)this.Configuration.ToggleRange))
+                if (Game.IsControlJustPressed(0, (Control)this.Configuration.ToggleRangeKey))
                     this.OnVoiceRangePressed();
 
-                if (Game.IsControlJustPressed(0, (Control)this.Configuration.TalkPrimary))
+                if (Game.IsControlJustPressed(0, (Control)this.Configuration.TalkPrimaryKey))
                     this.OnPrimaryRadioPressed();
-                else if (Game.IsControlJustReleased(0, (Control)this.Configuration.TalkPrimary))
+                else if (Game.IsControlJustReleased(0, (Control)this.Configuration.TalkPrimaryKey))
                     this.OnPrimaryRadioReleased();
 
                 if (Game.IsControlJustPressed(0, (Control)this.Configuration.TalkSecondary))
