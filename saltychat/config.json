@@ -5,8 +5,16 @@
   "SoundPack": "default",
   "IngameChannelId": 25,
   "IngameChannelPassword": "5V88FWWME615",
-  "SwissChannelIds": [ 61, 62 ],
-  "VoiceRanges": [ 3.5, 8, 15, 32 ],
+  "SwissChannelIds": [
+    61,
+    62
+  ],
+  "VoiceRanges": [
+    3.5,
+    8,
+    15,
+    32
+  ],
   "EnableVoiceRangeNotification": true,
   "VoiceRangeNotification": "New voice range is {voicerange} metres.",
   "RadioType": 4,
@@ -22,7 +30,5 @@
   "ToggleRangeKey": "J",
   "TalkPrimary": 1271519931,
   "TalkPrimaryKey": "N",
-  "TalkSecondary": 1287709438,
-  "TalkSecondaryKey": "B",
-  "TalkMegaphoneKey": "H"
+  "TalkSecondary": 1287709438
 }

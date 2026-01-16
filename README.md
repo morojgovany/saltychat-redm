@@ -6,6 +6,12 @@ You can report bugs or make sugguestions via issues, or contribute via pull requ
 
 Join our [Discord](https://gaming.v10networks.com/Discord) and start with [Salty Chat](https://gaming.v10networks.com/SaltyChat)!
 
+## This is a fork of the original Salty Chat for RedM
+### Ameliorations :
+- Fix the range key not working on vehicles (If J key binded)
+- Add a client event for togglerange (to trigger it from another resource)
+- Handle keys in config for togglerange
+
 # Setup Steps
 Before starting with the setup, make sure you have OneSync enabled and your server artifacts are up to date.
 
