@@ -39,11 +39,15 @@ RadioType | `int` | Radio type which will be used for radio communication - [see
 EnableRadioHardcoreMode | `bool` | Limits some radio functions like using the radio while swimming/diving and allows only one sender at a time
 UltraShortRangeDistance | `float` | Maximum range of USR radio mode
 ShortRangeDistance | `float` | Maximum range of SR radio mode
-LongRangeDistace | `float` | Maximum range of LR radio mode
+LongRangeDistance | `float` | Maximum range of LR radio mode
 MegaphoneRange | `float` | Range of the megaphone (only available while driving a police car)
 NamePattern | `string` | Naming schema of TeamSpeak clients, `{serverid}` will be replaced by the RedM server ID of the client, `{playername}` by the name of the client and `{guid}` by a generated GUID
 RequestTalkStates | `bool` | Enables/disables [TalkState's](https://github.com/v10networkscom/saltychat-docs/blob/master/commands.md#11--talkstate)
 RequestRadioTrafficStates | `bool` | Enables/disables [RadioTrafficState's](https://github.com/v10networkscom/saltychat-docs/blob/master/commands.md#33--radiotrafficstate)
+ToggleRangeKey | `string` | Default key mapping for toggling voice range (can be rebound in key bindings)
+TalkPrimaryKey | `string` | Default key mapping for primary radio (can be rebound in key bindings)
+TalkSecondaryKey | `string` | Default key mapping for secondary radio (can be rebound in key bindings)
+TalkMegaphoneKey | `string` | Default key mapping for megaphone (can be rebound in key bindings)
 
 # Keybinds
 Description | Control | Default QWERTY
@@ -51,6 +55,7 @@ Description | Control | Default QWERTY
 Toggle voice range | OpenJournal | J
 Talk on primary radio | PushToTalk | N
 Talk on secondary radio | OpenSatchelMenu | B
+Use megaphone | - | H
 
 # Events
 ## Client

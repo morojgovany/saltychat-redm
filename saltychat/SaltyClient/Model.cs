@@ -64,11 +64,11 @@ namespace SaltyClient
         /// <summary>
         /// Maximum range of LR radio mode
         /// </summary>
-        public float LongRangeDistace { get; set; }
+        public float LongRangeDistance { get; set; }
         #endregion
 
         #region CTOR
-        public GameInstance(string serverUniqueIdentifier, string name, ulong channelId, string channelPassword, string soundPack, ulong[] swissChannels, bool sendTalkStates, bool sendRadioTrafficStates, float ultraShortRangeDistance, float shortRangeDistance, float longRangeDistace)
+        public GameInstance(string serverUniqueIdentifier, string name, ulong channelId, string channelPassword, string soundPack, ulong[] swissChannels, bool sendTalkStates, bool sendRadioTrafficStates, float ultraShortRangeDistance, float shortRangeDistance, float longRangeDistance)
         {
             this.ServerUniqueIdentifier = serverUniqueIdentifier;
             this.Name = name;
@@ -80,7 +80,7 @@ namespace SaltyClient
             this.SendRadioTrafficStates = sendRadioTrafficStates;
             this.UltraShortRangeDistance = ultraShortRangeDistance;
             this.ShortRangeDistance = shortRangeDistance;
-            this.LongRangeDistace = longRangeDistace;
+            this.LongRangeDistance = longRangeDistance;
         }
         #endregion
     }

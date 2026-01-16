@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace SaltyShared
 {
@@ -21,15 +22,24 @@ namespace SaltyShared
         public bool EnableRadioHardcoreMode { get; set; } = true;
         public float UltraShortRangeDistance { get; set; } = 1800f;
         public float ShortRangeDistance { get; set; } = 3000f;
-        public float LongRangeDistace { get; set; } = 8000f;
+        public float LongRangeDistance { get; set; } = 8000f;
+        [JsonProperty("LongRangeDistace")]
+        public float LongRangeDistace
+        {
+            get => this.LongRangeDistance;
+            set => this.LongRangeDistance = value;
+        }
         public float MegaphoneRange { get; set; } = 120f;
         public string NamePattern { get; set; } = "{guid}";
         public bool RequestTalkStates { get; set; } = true;
         public bool RequestRadioTrafficStates { get; set; } = false;
 
         public long ToggleRange { get; set; } = 4085452174;
+        public string ToggleRangeKey { get; set; } = "J";
         public long TalkPrimary { get; set; } = 1271519931;
+        public string TalkPrimaryKey { get; set; } = "N";
         public long TalkSecondary { get; set; } = 1287709438;
-        //public string TalkMegaphone { get; set; } = "B";
+        public string TalkSecondaryKey { get; set; } = "B";
+        public string TalkMegaphoneKey { get; set; } = "H";
     }
 }

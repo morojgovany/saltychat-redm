@@ -65,7 +65,9 @@ namespace SaltyClient
 
                 if (!value)
                 {
-                    foreach (RadioTraffic radioTraffic in this.RadioTrafficStates.ToArray())
+                    RadioTraffic[] radioTrafficSnapshot = this.RadioTrafficStates.ToArray();
+
+                    foreach (RadioTraffic radioTraffic in radioTrafficSnapshot)
                     {
                         if (radioTraffic.Name == this.TeamSpeakName)
                         {
@@ -91,8 +93,13 @@ namespace SaltyClient
 
                 if (value)
                 {
-                    foreach (RadioTraffic radioTraffic in this.RadioTrafficStates.ToArray().Where(r => r.Name != this.TeamSpeakName))
+                    RadioTraffic[] radioTrafficSnapshot = this.RadioTrafficStates.ToArray();
+
+                    foreach (RadioTraffic radioTraffic in radioTrafficSnapshot)
                     {
+                        if (radioTraffic.Name == this.TeamSpeakName)
+                            continue;
+
                         this.ExecuteCommand(
                             new PluginCommand(
                                 Command.RadioCommunicationUpdate,
@@ -113,8 +120,13 @@ namespace SaltyClient
                 }
                 else
                 {
-                    foreach (RadioTraffic radioTraffic in this.RadioTrafficStates.ToArray().Where(r => r.Name != this.TeamSpeakName))
+                    RadioTraffic[] radioTrafficSnapshot = this.RadioTrafficStates.ToArray();
+
+                    foreach (RadioTraffic radioTraffic in radioTrafficSnapshot)
                     {
+                        if (radioTraffic.Name == this.TeamSpeakName)
+                            continue;
+
                         this.ExecuteCommand(
                             new PluginCommand(
                                 Command.StopRadioCommunication,
@@ -863,26 +875,46 @@ namespace SaltyClient
         [Tick]
         private async Task FirstTick()
         {
-            this.Configuration = JsonConvert.DeserializeObject<Configuration>(API.LoadResourceFile(API.GetCurrentResourceName(), "config.json"));
+            string configContent = API.LoadResourceFile(API.GetCurrentResourceName(), "config.json");
+            Configuration configuration = null;
+
+            if (String.IsNullOrWhiteSpace(configContent))
+            {
+                Debug.WriteLine("[Salty Chat] Warning: config.json is missing or empty. Falling back to defaults.");
+                configuration = new Configuration();
+            }
+            else
+            {
+                try
+                {
+                    configuration = JsonConvert.DeserializeObject<Configuration>(configContent);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine($"[Salty Chat] Error: Failed to parse config.json. Falling back to defaults.{Environment.NewLine}{exception}");
+                    configuration = new Configuration();
+                }
+            }
+
+            this.Configuration = configuration ?? new Configuration();
 
             // Register commands and key mappings
             /*
             API.RegisterCommand("+voiceRange", new Action(this.OnVoiceRangePressed), false);
             API.RegisterCommand("-voiceRange", new Action(this.OnVoiceRangeReleased), false);
-            API.RegisterKeyMapping("+voiceRange", "Toggle Voice Range", "keyboard", this.Configuration.ToggleRange);
+            API.RegisterKeyMapping("+voiceRange", "Toggle Voice Range", "keyboard", this.Configuration.ToggleRangeKey);
 
             API.RegisterCommand("+primaryRadio", new Action(this.OnPrimaryRadioPressed), false);
             API.RegisterCommand("-primaryRadio", new Action(this.OnPrimaryRadioReleased), false);
-            API.RegisterKeyMapping("+primaryRadio", "Use Primary Radio", "keyboard", this.Configuration.TalkPrimary);
+            API.RegisterKeyMapping("+primaryRadio", "Use Primary Radio", "keyboard", this.Configuration.TalkPrimaryKey);
 
             API.RegisterCommand("+secondaryRadio", new Action(this.OnSecondaryRadioPressed), false);
             API.RegisterCommand("-secondaryRadio", new Action(this.OnSecondaryRadioReleased), false);
-            API.RegisterKeyMapping("+secondaryRadio", "Use Secondary Radio", "keyboard", this.Configuration.TalkSecondary);
+            API.RegisterKeyMapping("+secondaryRadio", "Use Secondary Radio", "keyboard", this.Configuration.TalkSecondaryKey);
 
             API.RegisterCommand("+megaphone", new Action(this.OnMegaphonePressed), false);
             API.RegisterCommand("-megaphone", new Action(this.OnMegaphoneReleased), false);
-            API.RegisterKeyMapping("+megaphone", "Use Megaphone", "keyboard", this.Configuration.TalkMegaphone);
-            */
+            API.RegisterKeyMapping("+megaphone", "Use Megaphone", "keyboard", this.Configuration.TalkMegaphoneKey);*/
 
             BaseScript.TriggerServerEvent(Event.SaltyChat_Initialize);
 
@@ -942,7 +974,7 @@ namespace SaltyClient
                 int playerRoomId = API.GetRoomKeyFromEntity(playerPed.Handle);
 
                 List<PlayerState> playerStates = new List<PlayerState>();
-                List<int> updatedPlayers = new List<int>();
+                HashSet<int> updatedPlayers = new HashSet<int>();
 
                 foreach (Player nPlayer in VoiceManager.PlayerList)
                 {
@@ -981,8 +1013,11 @@ namespace SaltyClient
                     updatedPlayers.Add(voiceClient.ServerId);
                 }
 
-                foreach (VoiceClient culledVoiceClient in this.VoiceClients.Where(c => !c.DistanceCulled && !updatedPlayers.Contains(c.ServerId)))
+                foreach (VoiceClient culledVoiceClient in this._voiceClients.Values)
                 {
+                    if (culledVoiceClient.DistanceCulled || updatedPlayers.Contains(culledVoiceClient.ServerId))
+                        continue;
+
                     culledVoiceClient.DistanceCulled = true;
 
                     playerStates.Add(
@@ -1125,7 +1160,7 @@ namespace SaltyClient
                         this.Configuration.RequestRadioTrafficStates,
                         this.Configuration.UltraShortRangeDistance,
                         this.Configuration.ShortRangeDistance,
-                        this.Configuration.LongRangeDistace
+                        this.Configuration.LongRangeDistance
                     )
                 )
             );
